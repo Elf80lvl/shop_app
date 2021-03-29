@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shop_app/constants.dart';
+import 'package:shop_app/models/product.dart';
+import 'package:shop_app/screens/details/details_screen.dart';
+import 'package:shop_app/screens/home/components/categories.dart';
+import 'package:shop_app/screens/home/components/item_card.dart';
 
 class Body extends StatelessWidget {
   @override
@@ -18,59 +22,32 @@ class Body extends StatelessWidget {
           ),
         ),
         Categories(),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
+            child: GridView.builder(
+              itemCount: products.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: kDefaultPadding,
+                crossAxisSpacing: kDefaultPadding,
+                childAspectRatio: 0.75,
+              ),
+              itemBuilder: (context, index) => ItemCard(
+                product: products[index],
+                press: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailsScreen(
+                      product: products[index],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        )
       ],
-    );
-  }
-}
-
-class Categories extends StatefulWidget {
-  @override
-  _CategoriesState createState() => _CategoriesState();
-}
-
-class _CategoriesState extends State<Categories> {
-  List<String> categories = ['Hand Bag', 'Jewelry', 'Footwear', 'Dresses'];
-  int selectedIndex = 0; //by default first item selected
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 25,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: categories.length,
-        itemBuilder: (context, index) => buildCategorie(index),
-      ),
-    );
-  }
-
-  Widget buildCategorie(int index) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedIndex = index;
-        });
-      },
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: kDefaultPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              categories[index],
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: selectedIndex == index ? kTextColor : kTextLightColor),
-            ),
-            Container(
-              margin: EdgeInsets.only(top: kDefaultPadding / 4),
-              height: 2,
-              width: 30,
-              color: selectedIndex == index ? Colors.black : Colors.transparent,
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
